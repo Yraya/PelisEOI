@@ -31,7 +31,7 @@ nav {
     left: 0;
     right: 0;
     background-color: #1b2126;
-    z-index: 100;
+    z-index: 5;
 }
 
 nav > .wrapper > .container-flex {
@@ -129,7 +129,7 @@ aside {
     width: 270px;
     height: 40px;
     margin-top: -46px;
-    z-index: 50;
+    z-index: 3;
     position: absolute;
     color: white;
 
@@ -137,5 +137,98 @@ aside {
     background: rgba(0,0,0,0.7);
 }
 
+
+/*Modal window*/
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 0 0 auto auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 85%;
+}
+
+.movie-item-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.movie-cover > img {
+    width: 440px;
+    height: 660px;
+    text-align: center;
+}
+
+.synopsis-bar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.movie-genres span {
+    display: inline-block;
+    background-color: #e7eaec;
+    width: 86px;
+    padding: 2px 0;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.movie-reviews {
+    display: flex;
+    justify-content: space-between;
+    width: 216px;
+}
+
+.movie-details {
+    padding-left: 20px;
+    position: relative;
+    flex: 1;
+}
+
+.movie-details h3 {
+    margin-top: 0;
+}
+
+.synopsis {
+    height: 269px;
+    overflow: auto;
+}
+
+.trailer {
+/*
+    position: absolute;
+    bottom: 0;
+   */ 
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 /* Temporal styles */

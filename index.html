@@ -1,97 +1,157 @@
 <!DOCTYPE html>
-<html lang ="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>PelisEOI</title>
-        <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="styles/styles.css">
-    </head>
-    
-    <body>
-        <nav>
-            <div class="wrapper">
-                <div class="container-flex">
-                    <div id="logo"><img src="images/logo-pelis-eoi.png"></div>
-                    <div id="site-nav-links">
-                        <ul>
-                            <li>Categorías</li>
-                            <li>Mejor valoradas</li>
-                            <li>Populares ahora</li>
-                            <li>Próximamente</li>
-                        </ul>
-                    </div>
-                    <div class="search"><input type="search" class="search-input" placeholder="Encuentra tu película favorita"></div>   
-                </div>
-            </div>
-        </nav>
-        
-        <main>
-            <div class="wrapper">
-                <div class="container-flex">
-                    <aside id="filters">
-                        <div class="sub-nav">Filtrar - borrar</div>
-                        <div id="year">
-                            <p>Año</p><br>
-                            <img class="slider" src="images/slider.PNG">
-                        </div>
-                        <div id="imdr">
-                            <p>Valoración IMDB</p><br>
-                            <img class="slider" src="images/slider.PNG">
-                        </div>
-                        <div id="rotten-tomatoes-cs">
-                            <p>Rotten Tomatoes CS</p><br>
-                            <img class="slider" src="images/slider.PNG">
-                        </div>
-                        <div id="rotten-tomatoes-as">
-                            <p>Rotten Tomatoes AS</p><br>
-                            <img class="slider" src="images/slider.PNG">
-                        </div>
-                        <div id="genres">
-                            <p>Géneros</p>
-                            <div class="genre-item">Adventure</div>
-                            <div class="genre-item">Action</div>
-                            <div class="genre-item">Comedy</div>
-                            <div class="genre-item">Drama</div>
-                            <div class="genre-item">Horror</div>
-                        </div>
-                    </aside>
+<html lang="es">
 
-                    <div class="right-content">
-                        <div class="sub-nav"> 100 películas encontradas</div>
-                        <div class="movies">
-                            <h1>PelisEOI</h1>
-                            <div class="movie-item">
-                                <img src="images/temple-grandin.jpg">
-                                <div class="movie-item-bar">
-                                    <div class="item-icon"><img src="images/star-icon.png" > 8.4</div>
-                                    <div class="item-icon"><img src="images/tomato-icon.png" > 77%</div>
-                                    <div class="item-icon"><img src="images/popcorn-icon.png"> 77%</div>
+<head>
+    <meta charset="UTF-8">
+    <title>PelisEOI</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+</head>
+
+<body>
+    <nav>
+        <div class="wrapper">
+            <div class="container-flex">
+                <div id="logo"><img src="images/logo-pelis-eoi.png"></div>
+                <div id="site-nav-links">
+                    <ul>
+                        <li>Categorías</li>
+                        <li>Mejor valoradas</li>
+                        <li>Populares ahora</li>
+                        <li>Próximamente</li>
+                    </ul>
+                </div>
+                <div class="search"><input type="search" class="search-input" placeholder="Encuentra tu película favorita"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="wrapper">
+            <div class="container-flex">
+                <aside id="filters">
+                    <div class="sub-nav">Filtrar - borrar</div>
+                    <div id="year">
+                        <p>Año</p><br>
+                        <img class="slider" src="images/slider.PNG">
+                    </div>
+                    <div id="imdr">
+                        <p>Valoración IMDB</p><br>
+                        <img class="slider" src="images/slider.PNG">
+                    </div>
+                    <div id="rotten-tomatoes-cs">
+                        <p>Rotten Tomatoes CS</p><br>
+                        <img class="slider" src="images/slider.PNG">
+                    </div>
+                    <div id="rotten-tomatoes-as">
+                        <p>Rotten Tomatoes AS</p><br>
+                        <img class="slider" src="images/slider.PNG">
+                    </div>
+                    <div id="genres">
+                        <p>Géneros</p>
+                        <div class="genre-item">Adventure</div>
+                        <div class="genre-item">Action</div>
+                        <div class="genre-item">Comedy</div>
+                        <div class="genre-item">Drama</div>
+                        <div class="genre-item">Horror</div>
+                    </div>
+                </aside>
+
+                <div class="right-content">
+                    <div class="sub-nav"> 100 películas encontradas</div>
+
+                    <!--@include here -->
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>Title</h2>
+                            <hr>
+                            <div class="movie-item-container">
+                                <div class="movie-cover"><img src="images/temple-grandin.jpg"></div>
+                                <div class="movie-details">
+                                    <div class="synopsis">
+                                        <h3>Synopsis</h3>
+                                        <div class="synopsis-bar">
+                                            <div class="movie-genres">
+                                                <span>Aventura</span>
+                                                <span>Sci-Fi</span>
+                                            </div>
+                                            
+                                            <div class="movie-reviews">
+                                                <div class="item-icon"><img src="images/star-icon.png"> 8.4</div>
+                                <div class="item-icon"><img src="images/tomato-icon.png"> 77%</div>
+                                <div class="item-icon"><img src="images/popcorn-icon.png"> 77%</div>
+                                            </div>
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac felis ut enim consectetur pharetra. Aenean molestie consequat risus at pretium. Nunc porttitor augue neque. Fusce et velit imperdiet, efficitur augue in, sagittis est. In gravida egestas lectus eu elementum. Cras facilisis libero nisl. Aenean condimentum eros id porta euismod. Morbi quam est, laoreet vel euismod a, tristique eu magna.
+
+Maecenas consectetur magna eu mauris vehicula tristique ac in metus. Phasellus non nisl mi. Sed finibus mollis mi eget hendrerit. Vestibulum dignissim luctus scelerisque. Sed eu eros in lorem aliquet rutrum. Cras porttitor aliquet magna vitae sollicitudin. Sed tincidunt magna a rutrum cursus. Integer lacus lectus, egestas vitae congue interdum, suscipit at tortor. Nunc euismod finibus nulla nec finibus. Etiam et orci vestibulum, pharetra est et, ultricies risus.
+                                        </p>
+                                    </div>
+                                    <div class="trailer">
+                                        <h3>Trailer</h3>
+                                        <iframe width="703" height="342" src="https://www.youtube.com/embed/cpkN0JdXRpM" frameborder="0" allowfullscreen></iframe>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="movie-item">
-                                <img src="images/temple-grandin.jpg">
-                                <div class="movie-item-bar"></div>
+                            <div class="subtitles">
+                                <p>Subs: 
+                                    <a href="#">en</a>
+                                    <a href="#">es</a>
+                                    <a href="#">de</a>
+                                </p>
                             </div>
-                            <div class="movie-item">
-                                <img src="images/temple-grandin.jpg">
-                                <div class="movie-item-bar"></div>
+                            <hr>
+                            <div class="siimilar-movies">
+                                <p>Películas similares</p>
+                                <div class="covers-container">
+                                    <div>Cover 1, 2 , 3,...</div>
+                                </div>
                             </div>
-                            <div class="movie-item">
-                                <img src="images/temple-grandin.jpg">
-                                <div class="movie-item-bar"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="movies">
+                        <h1>PelisEOI</h1>
+                        <div id="myBtn" class="movie-item">
+                            <img src="images/temple-grandin.jpg">
+                            <div class="movie-item-bar">
+                                <div class="item-icon"><img src="images/star-icon.png"> 8.4</div>
+                                <div class="item-icon"><img src="images/tomato-icon.png"> +fav</div>
+                                <div class="item-icon"><img src="images/popcorn-icon.png"> +later</div>
                             </div>
-                            <div class="movie-item">
-                                <img src="images/temple-grandin.jpg">
-                                <div class="movie-item-bar"></div>
-                            </div>
-                            <div class="movie-item">
-                                <img src="images/temple-grandin.jpg">
-                                <div class="movie-item-bar"></div>
-                            </div>
+                        </div>
+                        <div class="movie-item">
+                            <img src="images/temple-grandin.jpg">
+                            <div class="movie-item-bar"></div>
+                        </div>
+                        <div class="movie-item">
+                            <img src="images/temple-grandin.jpg">
+                            <div class="movie-item-bar"></div>
+                        </div>
+                        <div class="movie-item">
+                            <img src="images/temple-grandin.jpg">
+                            <div class="movie-item-bar"></div>
+                        </div>
+                        <div class="movie-item">
+                            <img src="images/temple-grandin.jpg">
+                            <div class="movie-item-bar"></div>
+                        </div>
+                        <div class="movie-item">
+                            <img src="images/temple-grandin.jpg">
+                            <div class="movie-item-bar"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-    </body>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+
 </html>
