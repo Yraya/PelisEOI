@@ -7,13 +7,14 @@
     HomeController.$inject = ['$scope'];
     
     function HomeController($scope) {
-
+        $scope.getModal = getModal;
+        
+        
         init();
 
 
         function init() {
-            getModal();
-            $scope.texto = 'TEXTO 2';
+
         }
 
         function getModal() {

@@ -224,10 +224,8 @@ aside {
 }
 
 .trailer {
-/*
-    position: absolute;
-    bottom: 0;
-   */ 
+    height: 391px;
+    overflow: auto;
 }
 
 /* The Close Button */
