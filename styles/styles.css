@@ -98,6 +98,10 @@ aside {
     padding-left: 17px;
 }
 
+.sub-nav p {
+    margin-top: 0;
+}
+
 .movies {
     display: flex;
     flex-wrap: wrap;
@@ -206,7 +210,17 @@ aside {
 
 .synopsis {
     height: 269px;
+}
+
+.movie-description {
+    margin-top: 20px;
+    height: 160px;
     overflow: auto;
+}
+
+.movie-description p {
+    margin-top: 0;
+    margin-right: 10px;
 }
 
 .trailer {
