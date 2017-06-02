@@ -1,1 +1,1 @@
-angular.module('PelisEOI', []);
+angular.module('PelisEOI', ['rzModule']);

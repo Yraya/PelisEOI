@@ -8,7 +8,15 @@
     
     function HomeController($scope) {
         $scope.getModal = getModal;
-        
+        $scope.slider = {
+            minValue: 1958,
+            maxValue: 2017,
+            options: {
+                floor: 1878,
+                ceil: 2017,
+                step: 1
+            }
+        };
         
         init();
 
@@ -20,7 +28,7 @@
         function getModal() {
 
             // Get the modal
-            var modal = document.getElementById('myModal');
+            var modal = document.getElementById('movie-details-modal');
 
             // Get the button that opens the modal
             var btn = document.getElementById("myBtn");
