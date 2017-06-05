@@ -5,9 +5,11 @@
         .controller('HomeController', HomeController);
 
     HomeController.$inject = ['$scope', 'MoviesFactory'];
-    
+
     function HomeController($scope, MoviesFactory) {
-        $scope.getModal = getModal;
+        var YOUTUBE_BASE_PATH = "https://www.youtube.com/embed/";
+        $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
+
         $scope.slider = {
             minValue: 2000,
             maxValue: 2017,
@@ -18,29 +20,45 @@
             }
         };
         
+        $scope.getModal = getModal;
+
         init();
 
 
         function init() {
             MoviesFactory.init()
-                .then(function() {
-                return MoviesFactory.getMoviesPreview()
-            }).then(function(moviesPreview){
-                $scope.movies = moviesPreview;
-            }).then(function(){
-               $scope.moviesFound = MoviesFactory.getMoviesFound()
-            });
+                .then(function () {
+                    return MoviesFactory.getMoviesPreview()
+                }).then(function (moviesPreview) {
+                    $scope.movies = moviesPreview;
+                }).then(function () {
+                    $scope.moviesFound = MoviesFactory.getMoviesFound()
+                });
         }
 
+
+
         function getModal(movie) {
+            $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
             $scope.movieTitle = movie.title;
             $scope.movieOverview = movie.overview;
             $scope.movieCover = movie.cover;
-            
+
             //$scope.movieRuntime = MoviesFactory.getMovieDetails(movie.id);
-            //$scope.movieTrailer = MoviesFactory.getMovieTrailer(movie.id);
-            
-            
+            MoviesFactory.getMovieTrailer(movie.id, "es").then(function (trailerKey) {
+                if (trailerKey != -1) {
+                    $scope.movieTrailer = YOUTUBE_BASE_PATH + trailerKey;
+                } else {
+                    MoviesFactory.getMovieTrailer(movie.id, "en-US").
+                    then(function (trailerKey) {
+                        if (trailerKey != -1) {
+                            $scope.movieTrailer = YOUTUBE_BASE_PATH + trailerKey;
+                        }
+                    });
+                }
+            });
+
+
             // Get the modal
             var modal = document.getElementById('movie-details-modal');
 
