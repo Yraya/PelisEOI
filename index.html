@@ -6,7 +6,7 @@
     <title>PelisEOI</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/angularjs-slider/dist/rzslider.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/angularjs-slider/dist/rzslider.css" />
     <script data-require="angular.js@1.6.2" data-semver="1.6.2" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
 </head>
 
@@ -34,9 +34,7 @@
                 <aside id="filters">
                     <div class="sub-nav">Filtrar - borrar</div>
                     <div>
-                        <rzslider rz-slider-model="slider.minValue"
-                                  rz-slider-high="slider.maxValue"
-                                  rz-slider-options="slider.options">
+                        <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options">
                         </rzslider>
                     </div>
                     <div id="year">
@@ -67,12 +65,35 @@
 
                 <div class="right-content">
                     <div class="sub-nav">
-                        <p>100 películas encontradas</p>
+                        <p>{{moviesFound}} películas encontradas</p>
                     </div>
 
                     <!--Include for movie details -->
-                    <div ng-include="'views/movieDetails.html'" onload="getModal()"></div>
+                    <div ng-include="'views/movieDetails.html'"></div>
 
+                    <div class="movies">
+                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)">
+
+                            <img src="{{movie.cover}}">
+                            <div class="movie-item-bar">
+                                <div class="item-icon">
+                                    <img src="images/star-icon.png"> {{movie.vote_average}}
+                                </div>
+                                <div class="item-icon">
+                                    <img ng-show="!movie.favorite" src="images/heart-icon.ico" ng-click="addToFav(movie.id)">
+                                    <img ng-show="movie.favorite" src="images/heart-icon.png" ng-click="removeFromFav(movie.id)">
+                                </div>
+                                <div class="item-icon">
+                                    <img ng-show="!movie.later" src="images/time-icon.png" ng-click="addToSeeLater(movie.id)">
+                                    <img ng-show="movie.later" src="images/time-later-icon.png" ng-click="removeFromSeeLater(movie.id)">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!--                  
                     <div class="movies">
                         <h1>PelisEOI</h1>
                         <div class="movie-item cover-button">
@@ -104,15 +125,21 @@
                             <div class="movie-item-bar"></div>
                         </div>
                     </div>
+-->
                 </div>
             </div>
         </div>
     </main>
 
-    <!--Srcipts-->
+    <!-- App -->
     <script src="js/app.js"></script>
+
+    <!-- Services -->
+    <script src="js/factories/movies.factory.js"></script>
+
+    <!-- Controllers -->
     <script src="js/controllers/home.controller.js"></script>
-    
+
     <!--Sliders-->
     <script src="bower_components/angularjs-slider/dist/rzslider.min.js"></script>
 </body>

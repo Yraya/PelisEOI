@@ -238,4 +238,8 @@ aside {
     cursor: pointer;
 }
 
-/* Temporal styles */
+/* Sliders */
+
+div > .rzslider{
+    width:242px;
+}

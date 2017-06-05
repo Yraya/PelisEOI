@@ -4,15 +4,15 @@
     angular.module('PelisEOI')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$scope'];
+    HomeController.$inject = ['$scope', 'MoviesFactory'];
     
-    function HomeController($scope) {
+    function HomeController($scope, MoviesFactory) {
         $scope.getModal = getModal;
         $scope.slider = {
-            minValue: 1958,
+            minValue: 2000,
             maxValue: 2017,
             options: {
-                floor: 1878,
+                floor: 1960,
                 ceil: 2017,
                 step: 1
             }
@@ -22,11 +22,25 @@
 
 
         function init() {
-
+            MoviesFactory.init()
+                .then(function() {
+                return MoviesFactory.getMoviesPreview()
+            }).then(function(moviesPreview){
+                $scope.movies = moviesPreview;
+            }).then(function(){
+               $scope.moviesFound = MoviesFactory.getMoviesFound()
+            });
         }
 
-        function getModal() {
-
+        function getModal(movie) {
+            $scope.movieTitle = movie.title;
+            $scope.movieOverview = movie.overview;
+            $scope.movieCover = movie.cover;
+            
+            //$scope.movieRuntime = MoviesFactory.getMovieDetails(movie.id);
+            //$scope.movieTrailer = MoviesFactory.getMovieTrailer(movie.id);
+            
+            
             // Get the modal
             var modal = document.getElementById('movie-details-modal');
 
@@ -37,11 +51,7 @@
             var span = document.getElementsByClassName("close")[0];
 
             // When the user clicks the button, open the modal 
-            for (var i=0; i < btns.length; i++){
-                btns[i].onclick = function () {
-                    modal.style.display = "block";
-                }
-            }
+            modal.style.display = "block";
 
             // When the user clicks on <span> (x), close the modal
             span.onclick = function () {
