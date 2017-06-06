@@ -9,7 +9,7 @@
     function HomeController($scope, MoviesFactory) {
         var YOUTUBE_BASE_PATH = "https://www.youtube.com/embed/";
         $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
-
+        
         $scope.slider = {
             minValue: 2000,
             maxValue: 2017,
@@ -21,11 +21,13 @@
         };
         
         $scope.getModal = getModal;
+        $scope.filterByGenre = filterByGenre;
 
         init();
 
 
         function init() {
+            $scope.posterInitalPath = MoviesFactory.getPosterInitialPath();
             MoviesFactory.getGenresList().then(function(genres){
                 $scope.genresList = genres;
             });
@@ -46,7 +48,7 @@
             $scope.aditionalTrailerInfo = "";
             $scope.movieTitle = movie.title;
             $scope.movieOverview = movie.overview;
-            $scope.movieCover = movie.cover;
+            $scope.movieCover = movie.poster_path;
             $scope.movieYear = movie.release_year;
             $scope.movieRuntime = "-";
             $scope.movieGenres = [];
@@ -120,6 +122,17 @@
             }
             
             return hours+'h '+minutes+'m';
+        }
+        
+        function filterByGenre(genreID){
+            MoviesFactory.filterByGenre(genreID)
+                .then(function () {
+                    return MoviesFactory.getMoviesPreview()
+                }).then(function (moviesPreview) {
+                    $scope.movies = moviesPreview;
+                }).then(function () {
+                    $scope.moviesFound = MoviesFactory.getMoviesFound()
+                });
         }
     }
 

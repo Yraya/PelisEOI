@@ -79,6 +79,7 @@ main {
 aside {
     padding-top: 17px;
     padding-right: 17px;
+    border-right: solid 1px #e7eaec;
 }
 
 /* Filters*/
@@ -90,6 +91,33 @@ aside {
 .slider{
     width: 242px;
     height: 23px;
+}
+
+/* Genres */
+.genres-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.genre-item {
+    display: inline-block;
+    width: 50%;
+}
+
+.genre-item > span {
+    border: solid 1px #e7eaec;
+    min-width: 115px;
+    min-height: 33px;
+    padding: 3px 6px;
+    text-align: center;
+    border-radius: 4px;
+    margin: 5px 5px;
+    box-sizing: border-box;
+}
+
+.genre-item > span:hover {
+    border: solid 2px #2883d8;
+    cursor: pointer;
 }
 
 /* Content */
@@ -251,14 +279,15 @@ aside {
 /* Similar movies */
 .similar-movies-container {
     display: flex;
-    justify-content: space-between;
 }
 
 .similar-movie-cover {
-    width: 300px;
-    height: 270px;
+    width: 276px;
+    height: 250px;
+    padding: 3px 6px 3px 6px;
     overflow: hidden;
     cursor: pointer;
+    margin-right: 15px;
 }
 
 .similar-movie-item > p {

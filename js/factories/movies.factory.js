@@ -14,16 +14,22 @@ function MoviesFactory($http) {
 
     return {
         init: init,
+        getPosterInitialPath: getPosterInitialPath,
         getMoviesPreview: getMoviesPreview,
         getMoviesFound: getMoviesFound,
         getMovieTrailer: getMovieTrailer,
         getGenresList: getGenresList,
+        filterByGenre: filterByGenre,
         getMovieDetails: getMovieDetails,
         getOmdbInfo: getOmdbInfo,
         getSimilarMovies: getSimilarMovies
     }
 
     function init() {
+        return discoverMovies();
+    }
+    
+    function discoverMovies(){
         return $http({  //Return para el siguiente then en el HomeController
             method: 'GET',
             url: API_INITIAL_PATH+"discover/movie?sort_by=popularity.desc&language="+language+"&api_key="+API_KEY
@@ -35,6 +41,10 @@ function MoviesFactory($http) {
         }, function errorCallback(data) {
             console.log(404 + " Movies not found");
         });
+    }
+    
+    function getPosterInitialPath(){
+        return POSTER_INITIAL_PATH;
     }
     
     function getGenresList() {
@@ -63,8 +73,7 @@ function MoviesFactory($http) {
         for (var i=0; i < moviesArray.length; i++){
             var moviePreview = {};
             moviePreview.id = moviesArray[i].id;
-            moviePreview.cover = POSTER_INITIAL_PATH+
-                moviesArray[i].poster_path;
+            moviePreview.poster_path = moviesArray[i].poster_path;
             moviePreview.vote_average = moviesArray[i].vote_average;
             moviePreview.overview = moviesArray[i].overview;
             moviePreview.title = moviesArray[i].title;
@@ -161,5 +170,22 @@ function MoviesFactory($http) {
         }, function errorCallback(data) {
             console.log(404 + " Movie not found");
         });
+    }
+    
+    function filterByGenre(genreID){
+        //https://api.themoviedb.org/3/genre/16/movies?api_key=e5ca57166b93c4a814295f2034a2b0e8&language=es&include_adult=false&sort_by=created_at.asc
+        return $http({
+            method: 'GET',
+            url: API_INITIAL_PATH+"genre/"+genreID+"/movies?language="+language+"&api_key="+API_KEY
+        }).then(function successCallback(data) {
+            console.log("Movies by genre ("+genreID+"):");
+            console.log(data);
+            moviesArray = data["data"].results;
+            totalResults = data["data"].total_results;
+            
+        }, function errorCallback(data) {
+            console.log(404 + " Movie not found");
+        });
+        
     }
 }

@@ -54,12 +54,12 @@
                         <img class="slider" src="images/slider.PNG">
                     </div>
                     <div id="genres">
-                        <p>Géneros</p>
-                        <div class="genre-item">Adventure</div>
-                        <div class="genre-item">Action</div>
-                        <div class="genre-item">Comedy</div>
-                        <div class="genre-item">Drama</div>
-                        <div class="genre-item">Horror</div>
+                        <p><b>Géneros</b></p>
+                        <div class="genres-container">
+                            <div class="genre-item" ng-repeat="genre in genresList track by $index" ng-click="filterByGenre(genre.id)">
+                                <span class="genre-item">{{genre.name}}</span>
+                            </div>
+                        </div>
                     </div>
                 </aside>
 
@@ -72,9 +72,9 @@
                     <div ng-include="'views/movieDetails.html'"></div>
 
                     <div class="movies">
-                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)">
+                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
 
-                            <img src="{{movie.cover}}">
+                            <img src="{{posterInitalPath+movie.poster_path}}">
                             <div class="movie-item-bar">
                                 <div class="item-icon">
                                     <img src="images/star-icon.png"> {{movie.vote_average}}
