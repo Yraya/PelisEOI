@@ -40,20 +40,23 @@
 
         function getModal(movie) {
             $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
+            $scope.aditionalTrailerInfo = "";
             $scope.movieTitle = movie.title;
             $scope.movieOverview = movie.overview;
             $scope.movieCover = movie.cover;
+            $scope.movieYear = movie.release_year;
 
             //$scope.movieRuntime = MoviesFactory.getMovieDetails(movie.id);
             MoviesFactory.getMovieTrailer(movie.id, "es").then(function (trailerKey) {
                 if (trailerKey != -1) {
                     $scope.movieTrailer = YOUTUBE_BASE_PATH + trailerKey;
                 } else {
+                    $scope.aditionalTrailerInfo = "(No se encontraron trailers en español)";
                     MoviesFactory.getMovieTrailer(movie.id, "en-US").
                     then(function (trailerKey) {
                         if (trailerKey != -1) {
                             $scope.movieTrailer = YOUTUBE_BASE_PATH + trailerKey;
-                        }
+                        } else $scope.aditionalTrailerInfo = "(No se encontraron trailers en español ni inglés)";
                     });
                 }
             });

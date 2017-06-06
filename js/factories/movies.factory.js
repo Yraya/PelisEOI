@@ -41,8 +41,9 @@ function MoviesFactory($http) {
             moviePreview.vote_average = moviesArray[i].vote_average;
             moviePreview.overview = moviesArray[i].overview;
             moviePreview.title = moviesArray[i].title;
-            moviePreview.release_date = moviesArray[i].release_date;
-            
+            var year = moviesArray[i].release_date;
+            if (year.length != 0) year = year.substring(0,4);
+            moviePreview.release_year = year;
             moviePreview.favorite = isFavorite(moviePreview.id);
             moviePreview.later = seeLater(moviePreview.id);
             moviesPreview.push(moviePreview);
@@ -79,7 +80,7 @@ function MoviesFactory($http) {
         }).then(function successCallback(data) {
             console.log(data);
             var trailers = data["data"].results;
-            if (trailers.empty){
+            if (trailers.length === 0){
                 return -1;
             }else {
                 return trailers[0].key;

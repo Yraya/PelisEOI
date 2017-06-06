@@ -223,6 +223,11 @@ aside {
     margin-right: 10px;
 }
 
+/* Trailer */
+.aditional-trailer-info {
+    color: darkgrey;
+}
+
 /* The Close Button */
 .close {
     color: #aaaaaa;

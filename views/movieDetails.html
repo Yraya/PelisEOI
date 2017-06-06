@@ -4,7 +4,7 @@
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>{{movieTitle}}</h2>
+        <h2>{{movieTitle}} <span class="movie-year">{{movieYear}}</span></h2>
         <hr>
         <div class="movie-item-container">
             <div class="movie-cover"><img src="{{movieCover}}"></div>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="trailer">
-                    <h3>Trailer</h3>
+                    <h3>Trailer <span class="aditional-trailer-info">{{aditionalTrailerInfo}}</span></h3>
                     <iframe width="703" height="342" src="{{movieTrailer}}" frameborder="0" allowfullscreen ></iframe>
                 </div>
             </div>
