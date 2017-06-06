@@ -158,7 +158,7 @@ aside {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content */
+/*** Modal Content ****/
 .modal-content {
     background-color: #fefefe;
     margin: 0 0 auto auto;
@@ -183,11 +183,16 @@ aside {
     justify-content: space-between;
 }
 
+.movie-genres div {
+    display: inline-block;
+    margin-right: 7px;
+}
+
 .movie-genres span {
     display: inline-block;
     background-color: #e7eaec;
-    width: 86px;
-    padding: 2px 0;
+    min-width: 80px;
+    padding: 2px 6px;
     text-align: center;
     border-radius: 4px;
 }
@@ -223,10 +228,45 @@ aside {
     margin-right: 10px;
 }
 
+/* Title and synopsis*/
+#movie-title, #movie-synopsis {
+    display: inline-block;
+}
+
+/* Year and runtime */
+.movie-year, .movie-runtime {
+    color: darkgrey;
+    margin-left: 10px;
+}
+
+.movie-runtime {
+    text-align: right;
+}
+
 /* Trailer */
 .aditional-trailer-info {
     color: darkgrey;
 }
+
+/* Similar movies */
+.similar-movies-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.similar-movie-cover {
+    width: 300px;
+    height: 270px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.similar-movie-item > p {
+    width: 300px;
+    text-align: center;
+    font-size: 1.2em;
+} 
+
 
 /* The Close Button */
 .close {
@@ -242,6 +282,7 @@ aside {
     text-decoration: none;
     cursor: pointer;
 }
+/*** End Modal Content ***/
 
 /* Sliders */
 

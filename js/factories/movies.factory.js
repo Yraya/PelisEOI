@@ -6,6 +6,7 @@ function MoviesFactory($http) {
     var favoritesArray = [];
     var seeLaterArray = [];
     
+    var genres = [];
     var language = "es";
     var API_KEY = "e5ca57166b93c4a814295f2034a2b0e8";
     var API_INITIAL_PATH = "https://api.themoviedb.org/3/";
@@ -15,7 +16,11 @@ function MoviesFactory($http) {
         init: init,
         getMoviesPreview: getMoviesPreview,
         getMoviesFound: getMoviesFound,
-        getMovieTrailer: getMovieTrailer
+        getMovieTrailer: getMovieTrailer,
+        getGenresList: getGenresList,
+        getMovieDetails: getMovieDetails,
+        getOmdbInfo: getOmdbInfo,
+        getSimilarMovies: getSimilarMovies
     }
 
     function init() {
@@ -23,11 +28,33 @@ function MoviesFactory($http) {
             method: 'GET',
             url: API_INITIAL_PATH+"discover/movie?sort_by=popularity.desc&language="+language+"&api_key="+API_KEY
         }).then(function successCallback(data) {
+            console.log("Movies:");
             console.log(data);
             moviesArray = data["data"].results;
             totalResults = data["data"].total_results;
         }, function errorCallback(data) {
-            console.log(404 + "Movies not found");
+            console.log(404 + " Movies not found");
+        });
+    }
+    
+    function getGenresList() {
+        if (genres.length === 0){
+            return getGenres().then (function(){
+                return genres;
+            });
+        } else return genres;
+    }
+    
+    function getGenres() {
+        return $http({
+            method: 'GET',
+            url: API_INITIAL_PATH+"genre/movie/list?language="+language+"&api_key="+API_KEY
+        }).then(function successCallback(data) {
+            console.log("Genres:");
+            console.log(data);
+            genres = data["data"].genres;
+        }, function errorCallback(data) {
+            console.log(404 + " No genres found");
         });
     }
     
@@ -44,6 +71,7 @@ function MoviesFactory($http) {
             var year = moviesArray[i].release_date;
             if (year.length != 0) year = year.substring(0,4);
             moviePreview.release_year = year;
+            
             moviePreview.favorite = isFavorite(moviePreview.id);
             moviePreview.later = seeLater(moviePreview.id);
             moviesPreview.push(moviePreview);
@@ -78,6 +106,7 @@ function MoviesFactory($http) {
             method: 'GET',
             url: API_INITIAL_PATH+"movie/"+movieID+"/videos?&language="+trailerLanguage+"&api_key="+API_KEY
         }).then(function successCallback(data) {
+            console.log("Trailer:");
             console.log(data);
             var trailers = data["data"].results;
             if (trailers.length === 0){
@@ -86,8 +115,51 @@ function MoviesFactory($http) {
                 return trailers[0].key;
             }
         }, function errorCallback(data) {
-            console.log(404 + "Trailer not found");
+            console.log(404 + " Trailer not found");
         });
     }
 
+    function getMovieDetails(movieID){
+        return $http({
+            method: 'GET',
+            url: API_INITIAL_PATH+"movie/"+movieID+"?language="+language+"&api_key="+API_KEY
+        }).then(function successCallback(data) {
+            console.log("Movie details:");
+            console.log(data);
+            return data["data"];
+        }, function errorCallback(data) {
+            console.log(404 + " Movie not found");
+        });
+    }
+    
+    function getOmdbInfo(imdbID){
+        return $http({
+            method: 'GET',
+            url: "http://www.omdbapi.com/?i="+imdbID+"&apikey=3370463f"
+        }).then(function successCallback(data) {
+            console.log("OMBD Info:");
+            console.log(data);
+            return data["data"];
+        }, function errorCallback(data) {
+            console.log(404 + " Movie not found");
+        });
+    }
+    
+    function getSimilarMovies (movieID){
+        return $http({
+            method: 'GET',
+            url: API_INITIAL_PATH+"movie/"+movieID+"/similar?language="+language+"&api_key="+API_KEY
+        }).then(function successCallback(data) {
+            console.log("Similar movies:");
+            console.log(data);
+            var similarMovies = data["data"].results;
+            
+            if (similarMovies.length > 4){
+                return similarMovies.slice(0,4);
+            } else return similarMovies;
+            
+        }, function errorCallback(data) {
+            console.log(404 + " Movie not found");
+        });
+    }
 }

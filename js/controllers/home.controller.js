@@ -26,6 +26,9 @@
 
 
         function init() {
+            MoviesFactory.getGenresList().then(function(genres){
+                $scope.genresList = genres;
+            });
             MoviesFactory.init()
                 .then(function () {
                     return MoviesFactory.getMoviesPreview()
@@ -45,8 +48,24 @@
             $scope.movieOverview = movie.overview;
             $scope.movieCover = movie.cover;
             $scope.movieYear = movie.release_year;
+            $scope.movieRuntime = "-";
+            $scope.movieGenres = [];
+            $scope.movieVoteAverage = movie.vote_average;
+            $scope.rottenTomatoes = "-";
+            $scope.metacritc = "-";
+            $scope.similarMoviesList = [];
+            var imdbID = "none";
 
-            //$scope.movieRuntime = MoviesFactory.getMovieDetails(movie.id);
+            MoviesFactory.getMovieDetails(movie.id).then (function(movieDetails){
+                $scope.movieRuntime = processRuntime(movieDetails.runtime);
+                $scope.movieGenres = movieDetails.genres;
+                imdbID = movieDetails.imdb_id;
+                MoviesFactory.getOmdbInfo(imdbID).then(function (data){
+                    $scope.rottenTomatoes = data.Ratings[1].Value;
+                    $scope.metacritc = data.Ratings[2].Value;
+                });
+            });
+            
             MoviesFactory.getMovieTrailer(movie.id, "es").then(function (trailerKey) {
                 if (trailerKey != -1) {
                     $scope.movieTrailer = YOUTUBE_BASE_PATH + trailerKey;
@@ -59,6 +78,10 @@
                         } else $scope.aditionalTrailerInfo = "(No se encontraron trailers en español ni inglés)";
                     });
                 }
+            });
+            
+            MoviesFactory.getSimilarMovies(movie.id).then(function (similarMovies){
+                $scope.similarMoviesList = similarMovies;
             });
 
 
@@ -85,6 +108,18 @@
                     modal.style.display = "none";
                 }
             }
+        }
+        
+        function processRuntime(runtime){
+            var hours = 0;
+            var minutes = runtime;
+            
+            if (runtime > 60) {
+                hours = Math.floor(runtime/60);
+                minutes = runtime%60;
+            }
+            
+            return hours+'h '+minutes+'m';
         }
     }
 

@@ -4,23 +4,27 @@
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>{{movieTitle}} <span class="movie-year">{{movieYear}}</span></h2>
+        <h2 id="movie-title">{{movieTitle}}</h2><span class="movie-year">{{movieYear}}</span>
         <hr>
         <div class="movie-item-container">
             <div class="movie-cover"><img src="{{movieCover}}"></div>
             <div class="movie-details">
                 <div class="synopsis">
-                    <h3>Sinopsis</h3>
+                    <div class="synopsis-bar">
+                        <h3 id="movie-synopsis">Sinopsis</h3>
+                        <span class="movie-runtime">{{movieRuntime}}</span>
+                    </div>
                     <div class="synopsis-bar">
                         <div class="movie-genres">
-                            <span>Aventura</span>
-                            <span>Sci-Fi</span>
+                            <div ng-repeat="genre in movieGenres track by $index">
+                                <span>{{genre.name}}</span>
+                            </div>
                         </div>
 
                         <div class="movie-reviews">
-                            <div class="item-icon"><img src="images/star-icon.png"> 8.4</div>
-                            <div class="item-icon"><img src="images/tomato-icon.png"> 77%</div>
-                            <div class="item-icon"><img src="images/popcorn-icon.png"> 77%</div>
+                            <div class="item-icon"><img src="images/star-icon.png"> {{movieVoteAverage}}</div>
+                            <div class="item-icon"><img src="images/tomato-icon.png"> {{rottenTomatoes}}</div>
+                            <div class="item-icon"><img src="images/popcorn-icon.png"> {{metacritc}}</div>
                         </div>
                     </div>
                     <div class="movie-description">
@@ -41,10 +45,15 @@
             </p>
         </div>
         <hr>
-        <div class="siimilar-movies">
+        <div class="similar-movies">
             <p>Películas similares</p>
-            <div class="covers-container">
-                <div>Cover 1, 2 , 3,...</div>
+            <div class="similar-movies-container">
+                <div ng-repeat="similarMovie in similarMoviesList track by similarMovie.id" class="similar-movie-item" ng-click="getModal(similarMovie)">
+                    <div class="similar-movie-cover">
+                        <img src=https://image.tmdb.org/t/p/w342/{{similarMovie.poster_path}}>
+                    </div>
+                    <p>{{similarMovie.title}}</p>
+                </div>
             </div>
         </div>
     </div>
