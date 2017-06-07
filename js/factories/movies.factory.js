@@ -146,7 +146,7 @@ function MoviesFactory($http) {
     function getOmdbInfo(imdbID){
         return $http({
             method: 'GET',
-            url: "http://www.omdbapi.com/?i="+imdbID+"&apikey=3370463f"
+            url: "https://www.omdbapi.com/?i="+imdbID+"&apikey=3370463f"
         }).then(function successCallback(data) {
             console.log("OMBD Info:");
             console.log(data);
