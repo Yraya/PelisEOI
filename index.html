@@ -23,7 +23,10 @@
                         <li>Próximamente</li>
                     </ul>
                 </div>
-                <div class="search"><input type="search" class="search-input" placeholder="Encuentra tu película favorita"></div>
+                <div class="search">
+                    <img class= "search-icon" src="images/search-icon.png" ng-click="searchMovies(searchKey)">
+                    <input type="search" class="search-input" placeholder="Encuentra tu película favorita" ng-model="searchKey">
+                </div>
             </div>
         </div>
     </nav>
@@ -32,27 +35,25 @@
         <div class="wrapper">
             <div class="container-flex">
                 <aside id="filters">
-                    <div class="sub-nav">Filtrar - borrar</div>
-                    <div>
-                        <rzslider rz-slider-model="slider.minValue" rz-slider-high="slider.maxValue" rz-slider-options="slider.options">
+                    <div class="sub-nav">
+                        <p><img src="images/filter-icon.png" class="filter-icon" ng-click="filterMovies()"><span class="filter-text">Filtrar</span></p>
+                        <p><span class="reset-filters" ng-click="discover()">Borrar</span></p>
+                        
+                    </div>
+
+                    <div id="year">
+                        <p><b>Año</b></p>
+                        <rzslider class="custom-slider" rz-slider-model="yearSlider.minValue"
+                             rz-slider-high="yearSlider.maxValue" rz-slider-options="yearSlider.options">
                         </rzslider>
                     </div>
-                    <div id="year">
-                        <p>Año</p><br>
-                        <img class="slider" src="images/slider.PNG">
-                    </div>
                     <div id="imdr">
-                        <p>Valoración IMDB</p><br>
-                        <img class="slider" src="images/slider.PNG">
+                        <p><b>Valoración TMDb</b></p>
+                        <rzslider class="custom-slider" rz-slider-model="tmdbSlider.minValue"
+                             rz-slider-high="tmdbSlider.maxValue" rz-slider-options="tmdbSlider.options">
+                        </rzslider>
                     </div>
-                    <div id="rotten-tomatoes-cs">
-                        <p>Rotten Tomatoes CS</p><br>
-                        <img class="slider" src="images/slider.PNG">
-                    </div>
-                    <div id="rotten-tomatoes-as">
-                        <p>Rotten Tomatoes AS</p><br>
-                        <img class="slider" src="images/slider.PNG">
-                    </div>
+                    
                     <div id="genres">
                         <p><b>Géneros</b></p>
                         <div class="genres-container">
@@ -65,7 +66,10 @@
 
                 <div class="right-content">
                     <div class="sub-nav">
-                        <p>{{moviesFound}} películas encontradas</p>
+                        <p><b>{{moviesFound}}</b> películas encontradas</p>
+                        <p><img src="images/heart-icon.png">Ver favoritos 
+                            <img src="images/time-later-icon.png">Ver pospuestos
+                        </p>
                     </div>
 
                     <!--Include for movie details -->
@@ -74,7 +78,8 @@
                     <div class="movies">
                         <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
 
-                            <img src="{{posterInitalPath+movie.poster_path}}">
+                            <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path">
+                            <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path">
                             <div class="movie-item-bar">
                                 <div class="item-icon">
                                     <img src="images/star-icon.png"> {{movie.vote_average}}
