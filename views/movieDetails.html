@@ -8,7 +8,8 @@
         <hr>
         <div class="movie-item-container">
             <div class="movie-cover">
-                <img src="{{posterInitalPath+movieCover}}">
+                <img src="{{posterInitalPath+movieCover}}" ng-if="movieCover">
+                <img src="images/cover-not-found.jpg" ng-if="!movieCover">
             </div>
             <div class="movie-details">
                 <div class="synopsis">
@@ -35,7 +36,7 @@
                 </div>
                 <div class="trailer">
                     <h3>Trailer <span class="aditional-trailer-info">{{aditionalTrailerInfo}}</span></h3>
-                    <iframe width="703" height="342" src="{{movieTrailer}}" frameborder="0" allowfullscreen ></iframe>
+                    <iframe width="703" height="342" src="{{movieTrailer}}" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -52,7 +53,8 @@
             <div class="similar-movies-container">
                 <div ng-repeat="similarMovie in similarMoviesList track by similarMovie.id" class="similar-movie-item" ng-click="getModal(similarMovie)">
                     <div class="similar-movie-cover">
-                        <img src={{posterInitalPath+similarMovie.poster_path}}>
+                        <img src="{{posterInitalPath+similarMovie.poster_path}}" ng-if="similarMovie.poster_path">
+                        <img src="images/cover-not-found.jpg" ng-if="!similarMovie.poster_path">
                     </div>
                     <p>{{similarMovie.title}}</p>
                 </div>
