@@ -207,11 +207,22 @@ function MoviesFactory($http) {
         });
     }
     
-    function  getFilteredMovies(yearMin, yearMax, tmdbMin, tmdbMax){
+    function  getFilteredMovies(yearMin, yearMax, tmdbMin, tmdbMax, selectedGenres){
         //https://api.themoviedb.org/3/discover/movie?api_key=e5ca57166b93c4a814295f2034a2b0e8&language=es&sort_by=popularity.desc&page=1&release_date.gte=2015&release_date.lte=2016&vote_average.gte=5&vote_average.lte=7
+
+        //Adult content doesn't work because API filter doesn't work 
+        /* enableAdultContent in params
+        var adultContent = "";
+        if (!enableAdultContent) adultContent="&include_adult=false";
+        
+        //url would be: 
+        API_INITIAL_PATH+"discover/movie?api_key="+API_KEY+"&language="+language+"&sort_by=popularity.desc&primary_release_date.gte="+yearMin+"&primary_release_date.lte="+yearMax+"&vote_average.gte="+tmdbMin+"&vote_average.lte="+tmdbMax+adultContent
+        */
+        var genresList = selectedGenres.join([separador = ',']);
+        
         return $http({
             method: 'GET',
-            url: API_INITIAL_PATH+"discover/movie?api_key="+API_KEY+"&language="+language+"&sort_by=popularity.desc&primary_release_date.gte="+yearMin+"&primary_release_date.lte="+yearMax+"&vote_average.gte="+tmdbMin+"&vote_average.lte="+tmdbMax
+            url: API_INITIAL_PATH+"discover/movie?api_key="+API_KEY+"&language="+language+"&sort_by=popularity.desc&primary_release_date.gte="+yearMin+"&primary_release_date.lte="+yearMax+"&vote_average.gte="+tmdbMin+"&vote_average.lte="+tmdbMax+"&with_genres="+genresList
         }).then(function successCallback(data) {
             console.log("Movies between year "+yearMin+" and "+yearMax+":");
             console.log(data);

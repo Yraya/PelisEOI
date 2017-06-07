@@ -163,11 +163,16 @@ aside {
     border-radius: 4px;
     margin: 5px 5px;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
-.genre-item>span:hover {
+.genre-selected > span{
     border: solid 2px #2883d8;
-    cursor: pointer;
+}
+
+.adult-content-check {
+    font-size: 0.9em;
+    margin: 20px 0;
 }
 
 

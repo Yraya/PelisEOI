@@ -37,7 +37,7 @@
                 <aside id="filters">
                     <div class="sub-nav">
                         <p><img src="images/filter-icon.png" class="filter-icon" ng-click="filterMovies()"><span class="filter-text">Filtrar</span></p>
-                        <p><span class="reset-filters" ng-click="discover()">Borrar</span></p>
+                        <p><span class="reset-filters" ng-click="deleteFilters()">Borrar</span></p>
                         
                     </div>
 
@@ -54,10 +54,15 @@
                         </rzslider>
                     </div>
                     
+                    <!-- //Adult content doesn't work because API filter doesn't work 
+                    <div class="adult-content-check"><input type="checkbox" name="adultContent" ng-model="enableAdultContent">Mostrar contenido para adultos</div>
+                    -->
+                    
                     <div id="genres">
                         <p><b>Géneros</b></p>
                         <div class="genres-container">
-                            <div class="genre-item" ng-repeat="genre in genresList track by $index" ng-click="filterByGenre(genre.id)">
+                            <div class="genre-item" ng-repeat="genre in genresList track by $index" ng-click="filterByGenre(genre)"
+                                 ng-class="{'genre-selected': genre.selected}">
                                 <span class="genre-item">{{genre.name}}</span>
                             </div>
                         </div>

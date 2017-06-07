@@ -9,10 +9,12 @@
     function HomeController($scope, MoviesFactory) {
         var YOUTUBE_BASE_PATH = "https://www.youtube.com/embed/";
         $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
+        $scope.selectedGenresID = [];
+        //$scope.enableAdultContent = false;
         
         $scope.yearSlider = {
             minValue: 1960,
-            maxValue: 2000,
+            maxValue: 2025,
             options: {
                 floor: 1960,
                 ceil: 2025,
@@ -23,7 +25,7 @@
         
         $scope.tmdbSlider = {
             minValue: 0,
-            maxValue: 5,
+            maxValue: 10,
             options: {
                 floor: 0,
                 ceil: 10,
@@ -32,7 +34,7 @@
             }
         };
         
-        $scope.discover = discover;
+        $scope.deleteFilters = deleteFilters;
         $scope.getModal = getModal;
         $scope.filterByGenre = filterByGenre;
         $scope.searchMovies = searchMovies;
@@ -142,7 +144,21 @@
             return hours+'h '+minutes+'m';
         }
         
-        function filterByGenre(genreID){
+        function filterByGenre(genre){
+            if(genre.selected) {
+                genre.selected = false;
+                var index = $scope.selectedGenresID.indexOf(genre.id);
+                if (index !== -1) {
+                    $scope.selectedGenresID.splice(index, 1);
+                }
+            }
+            else {
+                genre.selected = true;
+                $scope.selectedGenresID.push(genre.id);
+            }
+            
+            
+            /*
             MoviesFactory.filterByGenre(genreID)
                 .then(function () {
                     return MoviesFactory.getMoviesPreview()
@@ -151,6 +167,7 @@
                 }).then(function () {
                     $scope.moviesFound = MoviesFactory.getMoviesFound()
                 });
+                */
         }
         
         function searchMovies(searchKey){
@@ -165,7 +182,7 @@
         }
         
         function filterMovies(){
-            MoviesFactory.getFilteredMovies($scope.yearSlider.minValue, $scope.yearSlider.maxValue, $scope.tmdbSlider.minValue, $scope.tmdbSlider.maxValue)
+            MoviesFactory.getFilteredMovies($scope.yearSlider.minValue, $scope.yearSlider.maxValue, $scope.tmdbSlider.minValue, $scope.tmdbSlider.maxValue, $scope.selectedGenresID)
                 .then(function () {
                     return MoviesFactory.getMoviesPreview()
                 }).then(function (moviesPreview) {
@@ -173,6 +190,20 @@
                 }).then(function () {
                     $scope.moviesFound = MoviesFactory.getMoviesFound()
                 });
+        }
+        
+        function deleteFilters(){
+            $scope.selectedGenresID = [];
+            $scope.yearSlider.minValue = 1960;
+            $scope.yearSlider.maxValue = 2025;
+            $scope.tmdbSlider.minValue = 0;
+            $scope.tmdbSlider.maxValue = 10;
+            
+            for (var i = 0; i < $scope.genresList.length; i++){
+                if ($scope.genresList[i].selected) $scope.genresList[i].selected = false;
+            }
+
+            discover();
         }
     }
 
