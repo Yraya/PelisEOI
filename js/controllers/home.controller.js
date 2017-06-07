@@ -156,18 +156,6 @@
                 genre.selected = true;
                 $scope.selectedGenresID.push(genre.id);
             }
-            
-            
-            /*
-            MoviesFactory.filterByGenre(genreID)
-                .then(function () {
-                    return MoviesFactory.getMoviesPreview()
-                }).then(function (moviesPreview) {
-                    $scope.movies = moviesPreview;
-                }).then(function () {
-                    $scope.moviesFound = MoviesFactory.getMoviesFound()
-                });
-                */
         }
         
         function searchMovies(searchKey){

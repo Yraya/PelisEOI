@@ -19,7 +19,6 @@ function MoviesFactory($http) {
         getMoviesFound: getMoviesFound,
         getMovieTrailer: getMovieTrailer,
         getGenresList: getGenresList,
-        filterByGenre: filterByGenre,
         getMovieDetails: getMovieDetails,
         getOmdbInfo: getOmdbInfo,
         getSimilarMovies: getSimilarMovies,
@@ -32,7 +31,7 @@ function MoviesFactory($http) {
     }
     
     function discoverMovies(){
-        return $http({  //Return para el siguiente then en el HomeController
+        return $http({
             method: 'GET',
             url: API_INITIAL_PATH+"discover/movie?sort_by=popularity.desc&language="+language+"&api_key="+API_KEY
         }).then(function successCallback(data) {
@@ -174,25 +173,7 @@ function MoviesFactory($http) {
         });
     }
     
-    function filterByGenre(genreID){
-        //https://api.themoviedb.org/3/genre/16/movies?api_key=e5ca57166b93c4a814295f2034a2b0e8&language=es&include_adult=false&sort_by=created_at.asc
-        return $http({
-            method: 'GET',
-            url: API_INITIAL_PATH+"genre/"+genreID+"/movies?language="+language+"&api_key="+API_KEY
-        }).then(function successCallback(data) {
-            console.log("Movies by genre ("+genreID+"):");
-            console.log(data);
-            moviesArray = data["data"].results;
-            totalResults = data["data"].total_results;
-            
-        }, function errorCallback(data) {
-            console.log(404 + " Movies not found");
-        });
-        
-    }
-    
     function getMoviesByKey(searchKey){
-        //https://api.themoviedb.org/3/search/movie?api_key=e5ca57166b93c4a814295f2034a2b0e8&language=es&query=leon&page=1
         return $http({
             method: 'GET',
             url: API_INITIAL_PATH+"search/movie?api_key="+API_KEY+"&language="+language+"&query="+searchKey
@@ -208,16 +189,6 @@ function MoviesFactory($http) {
     }
     
     function  getFilteredMovies(yearMin, yearMax, tmdbMin, tmdbMax, selectedGenres){
-        //https://api.themoviedb.org/3/discover/movie?api_key=e5ca57166b93c4a814295f2034a2b0e8&language=es&sort_by=popularity.desc&page=1&release_date.gte=2015&release_date.lte=2016&vote_average.gte=5&vote_average.lte=7
-
-        //Adult content doesn't work because API filter doesn't work 
-        /* enableAdultContent in params
-        var adultContent = "";
-        if (!enableAdultContent) adultContent="&include_adult=false";
-        
-        //url would be: 
-        API_INITIAL_PATH+"discover/movie?api_key="+API_KEY+"&language="+language+"&sort_by=popularity.desc&primary_release_date.gte="+yearMin+"&primary_release_date.lte="+yearMax+"&vote_average.gte="+tmdbMin+"&vote_average.lte="+tmdbMax+adultContent
-        */
         var genresList = selectedGenres.join([separador = ',']);
         
         return $http({
