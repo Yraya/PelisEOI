@@ -37,7 +37,7 @@
                 <aside id="filters">
                     <div class="sub-nav">
                         <p><img src="images/filter-icon.png" class="filter-icon" ng-click="filterMovies()"><span class="filter-text">Filtrar</span></p>
-                        <p><span class="reset-filters" ng-click="deleteFilters()">Borrar</span></p>
+                        <p><span class="reset-filters" ng-click="resetFilteredSearch()">Borrar</span></p>
                         
                     </div>
 
@@ -54,10 +54,6 @@
                         </rzslider>
                     </div>
                     
-                    <!-- //Adult content doesn't work because API filter doesn't work 
-                    <div class="adult-content-check"><input type="checkbox" name="adultContent" ng-model="enableAdultContent">Mostrar contenido para adultos</div>
-                    -->
-                    
                     <div id="genres">
                         <p><b>Géneros</b></p>
                         <div class="genres-container">
@@ -71,17 +67,21 @@
 
                 <div class="right-content">
                     <div class="sub-nav">
-                        <p><b>{{moviesFound}}</b> películas encontradas</p>
-                        <p><img src="images/heart-icon.png">Ver favoritos 
-                            <img src="images/time-later-icon.png">Ver pospuestos
+                        <p ng-cloak><b>{{moviesFound}}</b> películas encontradas</p>
+                        <p><img src="images/heart-icon.png"> Ver favoritos 
+                            <img src="images/time-later-icon.png"> Ver pospuestos
                         </p>
                     </div>
 
                     <!--Include for movie details -->
                     <div ng-include="'views/movieDetails.html'"></div>
 
-                    <div class="movies">
-                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
+                    <div class="loading-movies" ng-show="loadingMovies">
+                        <img src="images/loading-icon.gif">
+                    </div>
+                    
+                    <div class="movies" ng-hide="loadingMovies">
+                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}" ng-cloak>
 
                             <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path">
                             <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path">
@@ -101,6 +101,7 @@
 
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>

@@ -9,9 +9,12 @@
     function HomeController($scope, MoviesFactory) {
         var YOUTUBE_BASE_PATH = "https://www.youtube.com/embed/";
         $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
+        $scope.moviesFound = 0;
         $scope.selectedGenresID = [];
-        //$scope.enableAdultContent = false;
-        
+        $scope.searchKey = "";
+        $scope.loadingMovies = true;
+        $scope.movies = [];
+
         $scope.yearSlider = {
             minValue: 1960,
             maxValue: 2025,
@@ -22,7 +25,7 @@
                 noSwitching: true
             }
         };
-        
+
         $scope.tmdbSlider = {
             minValue: 0,
             maxValue: 10,
@@ -33,31 +36,36 @@
                 noSwitching: true
             }
         };
-        
-        $scope.deleteFilters = deleteFilters;
+
+        $scope.resetFilteredSearch = resetFilteredSearch;
         $scope.getModal = getModal;
         $scope.filterByGenre = filterByGenre;
         $scope.searchMovies = searchMovies;
         $scope.filterMovies = filterMovies;
-        
+
         init();
 
 
         function init() {
             $scope.posterInitalPath = MoviesFactory.getPosterInitialPath();
-            MoviesFactory.getGenresList().then(function(genres){
+            MoviesFactory.getGenresList().then(function (genres) {
                 $scope.genresList = genres;
             });
-            discover();
+            discover().then(function () {
+                $scope.basicMovieList = angular.copy($scope.movies);
+                $scope.basicMovieListNResults = angular.copy($scope.moviesFound);
+            });
         }
 
 
-        function discover(){
-            MoviesFactory.init()
+        function discover() {
+            startLoading();
+            return MoviesFactory.init()
                 .then(function () {
                     return MoviesFactory.getMoviesPreview()
                 }).then(function (moviesPreview) {
                     $scope.movies = moviesPreview;
+                    finishLoading();
                 }).then(function () {
                     $scope.moviesFound = MoviesFactory.getMoviesFound()
                 });
@@ -78,16 +86,16 @@
             $scope.similarMoviesList = [];
             var imdbID = "none";
 
-            MoviesFactory.getMovieDetails(movie.id).then (function(movieDetails){
+            MoviesFactory.getMovieDetails(movie.id).then(function (movieDetails) {
                 $scope.movieRuntime = processRuntime(movieDetails.runtime);
                 $scope.movieGenres = movieDetails.genres;
                 imdbID = movieDetails.imdb_id;
-                MoviesFactory.getOmdbInfo(imdbID).then(function (data){
+                MoviesFactory.getOmdbInfo(imdbID).then(function (data) {
                     $scope.rottenTomatoes = data.Ratings[1].Value;
                     $scope.metacritc = data.Ratings[2].Value;
                 });
             });
-            
+
             MoviesFactory.getMovieTrailer(movie.id, "es").then(function (trailerKey) {
                 if (trailerKey != -1) {
                     $scope.movieTrailer = YOUTUBE_BASE_PATH + trailerKey;
@@ -101,8 +109,8 @@
                     });
                 }
             });
-            
-            MoviesFactory.getSimilarMovies(movie.id).then(function (similarMovies){
+
+            MoviesFactory.getSimilarMovies(movie.id).then(function (similarMovies) {
                 $scope.similarMoviesList = similarMovies;
             });
 
@@ -116,7 +124,7 @@
             // Get the <span> element that closes the modal
             var span = document.getElementsByClassName("close")[0];
 
-            // When the user clicks the button, open the modal 
+            // When the user clicks the movie, open the modal 
             modal.style.display = "block";
 
             // When the user clicks on <span> (x), close the modal
@@ -131,67 +139,94 @@
                 }
             }
         }
-        
-        function processRuntime(runtime){
+
+        function processRuntime(runtime) {
             var hours = 0;
             var minutes = runtime;
-            
-            if (runtime > 60) {
-                hours = Math.floor(runtime/60);
-                minutes = runtime%60;
-            }
-            
-            return hours+'h '+minutes+'m';
+
+            if (runtime != null) { //works for undefined as well
+                if (runtime > 60) {
+                    hours = Math.floor(runtime / 60);
+                    minutes = runtime % 60;
+                }
+            } else minutes = 0;
+
+            return hours + 'h ' + minutes + 'm';
         }
-        
-        function filterByGenre(genre){
-            if(genre.selected) {
+
+        function filterByGenre(genre) {
+            if (genre.selected) {
                 genre.selected = false;
                 var index = $scope.selectedGenresID.indexOf(genre.id);
                 if (index !== -1) {
                     $scope.selectedGenresID.splice(index, 1);
                 }
-            }
-            else {
+            } else {
                 genre.selected = true;
                 $scope.selectedGenresID.push(genre.id);
             }
         }
-        
-        function searchMovies(searchKey){
-            MoviesFactory.getMoviesByKey(searchKey)
-                .then(function () {
-                    return MoviesFactory.getMoviesPreview()
-                }).then(function (moviesPreview) {
-                    $scope.movies = moviesPreview;
-                }).then(function () {
-                    $scope.moviesFound = MoviesFactory.getMoviesFound()
-                });
+
+        function searchMovies(searchKey) {
+            if (searchKey != "") {
+                deleteFilters();
+                startLoading();
+                MoviesFactory.getMoviesByKey(searchKey)
+                    .then(function () {
+                        return MoviesFactory.getMoviesPreview();
+                    }).then(function (moviesPreview) {
+                        $scope.movies = moviesPreview;
+                        finishLoading();
+                    }).then(function () {
+                        $scope.moviesFound = MoviesFactory.getMoviesFound();
+                    });
+            } else resetMovies();
         }
-        
-        function filterMovies(){
+
+        function filterMovies() {
+            startLoading();
             MoviesFactory.getFilteredMovies($scope.yearSlider.minValue, $scope.yearSlider.maxValue, $scope.tmdbSlider.minValue, $scope.tmdbSlider.maxValue, $scope.selectedGenresID)
                 .then(function () {
                     return MoviesFactory.getMoviesPreview()
                 }).then(function (moviesPreview) {
                     $scope.movies = moviesPreview;
+                    finishLoading();
                 }).then(function () {
                     $scope.moviesFound = MoviesFactory.getMoviesFound()
                 });
         }
-        
-        function deleteFilters(){
+
+        function deleteFilters() {
             $scope.selectedGenresID = [];
             $scope.yearSlider.minValue = 1960;
             $scope.yearSlider.maxValue = 2025;
             $scope.tmdbSlider.minValue = 0;
             $scope.tmdbSlider.maxValue = 10;
-            
-            for (var i = 0; i < $scope.genresList.length; i++){
+
+            for (var i = 0; i < $scope.genresList.length; i++) {
                 if ($scope.genresList[i].selected) $scope.genresList[i].selected = false;
             }
+        }
 
-            discover();
+        function resetFilteredSearch() {
+            deleteFilters();
+            resetMovies();
+        }
+
+        function resetMovies() {
+            $scope.movies = angular.copy($scope.basicMovieList);
+            $scope.moviesFound = angular.copy($scope.basicMovieListNResults);
+        }
+
+        function startLoading() {
+            //This works better than $scope.movies.movies = [] in order to empty the ng-repeat array
+            $scope.movies.length = 0;
+            $scope.moviesFound = 0;
+            $scope.loadingMovies = true;
+        }
+
+        function finishLoading() {
+            $scope.loadingMovies = false;
         }
     }
 
