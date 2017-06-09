@@ -259,7 +259,7 @@ aside {
     padding-bottom: 22px;
 }
 
-.movie-item>img, .load-more-movies {
+.movie-item> div > img, .load-more-movies {
     height: 400px;
     width: 270px;
     position: relative;
@@ -276,7 +276,7 @@ aside {
     transition: 1s ease-in-out;
 }
 
-.movie-item:hover>img {
+.movie-item:hover > div > img {
     filter: brightness(50%);
 }
 
@@ -298,7 +298,7 @@ aside {
     background: rgba(0, 0, 0, 0.7);
 }
 
-.movie-item>img.coming-soon-mark{
+.movie-item > div > img.coming-soon-mark{
     width: 270px;
     height: 190px;
     z-index: 2;

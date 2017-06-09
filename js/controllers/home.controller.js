@@ -141,6 +141,10 @@
             });
 
 
+            initModal();
+        }
+        
+        function initModal(){
             // Get the modal
             var modal = document.getElementById('movie-details-modal');
 
@@ -158,6 +162,8 @@
             span.onclick = function () {
                 modal.style.display = "none";
                 $scope.modalActive = false;
+                $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
+                $scope.$apply();
             }
 
             // When the user clicks anywhere outside of the modal, close it
@@ -165,6 +171,8 @@
                 if (event.target == modal) {
                     modal.style.display = "none";
                     $scope.modalActive = false;
+                    $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
+                    $scope.$apply();
                 }
             }
         }
@@ -283,7 +291,7 @@
         function removeFromSeeLater(movie) {
             movie.later = false;
             MoviesFactory.removeFromSeeLater(movie.id);
-            $scope.moviesFound = MoviesFactory.getMoviesFound();
+            $scope.moviesFound = $scope.movies.length;
             MoviesFactory.saveSeeLater();
         }
 

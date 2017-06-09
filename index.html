@@ -10,10 +10,8 @@
     <script data-require="angular.js@1.6.2" data-semver="1.6.2" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
 </head>
 
-<body ng-controller="HomeController">
-    <!-- disable vertical scroll doesn't work
-    <body ng-controller="HomeController" ng-class="{'disable-vertical-scroll': modalActive}" >
--->
+<body ng-controller="HomeController" ng-class="{'disable-vertical-scroll': modalActive}" >
+
     <nav>
         <div class="wrapper">
             <div class="container-flex">
@@ -24,7 +22,7 @@
                     </ul>
                 </div>
                 <div class="search">
-                    <img class= "search-icon" src="images/search-icon.png" ng-click="searchMovies(searchKey)">
+                    <img class="search-icon" src="images/search-icon.png" ng-click="searchMovies(searchKey)">
                     <input type="search" class="search-input" placeholder="Encuentra tu película favorita" ng-model="searchKey">
                 </div>
             </div>
@@ -38,27 +36,24 @@
                     <div class="sub-nav">
                         <p><img src="images/filter-icon.png" class="filter-icon" ng-click="filterMovies()"><span class="filter-text">Filtrar</span></p>
                         <p><span class="reset-filters" ng-click="resetFilteredSearch()">Borrar</span></p>
-                        
+
                     </div>
 
                     <div id="year">
                         <p><b>Año</b></p>
-                        <rzslider class="custom-slider" rz-slider-model="yearSlider.minValue"
-                             rz-slider-high="yearSlider.maxValue" rz-slider-options="yearSlider.options">
+                        <rzslider class="custom-slider" rz-slider-model="yearSlider.minValue" rz-slider-high="yearSlider.maxValue" rz-slider-options="yearSlider.options">
                         </rzslider>
                     </div>
                     <div id="imdr">
                         <p><b>Valoración TMDb</b></p>
-                        <rzslider class="custom-slider" rz-slider-model="tmdbSlider.minValue"
-                             rz-slider-high="tmdbSlider.maxValue" rz-slider-options="tmdbSlider.options">
+                        <rzslider class="custom-slider" rz-slider-model="tmdbSlider.minValue" rz-slider-high="tmdbSlider.maxValue" rz-slider-options="tmdbSlider.options">
                         </rzslider>
                     </div>
-                    
+
                     <div id="genres">
                         <p><b>Géneros</b></p>
                         <div class="genres-container">
-                            <div class="genre-item" ng-repeat="genre in genresList track by $index" ng-click="filterByGenre(genre)"
-                                 ng-class="{'genre-selected': genre.selected}">
+                            <div class="genre-item" ng-repeat="genre in genresList track by $index" ng-click="filterByGenre(genre)" ng-class="{'genre-selected': genre.selected}">
                                 <span class="genre-item">{{genre.name}}</span>
                             </div>
                         </div>
@@ -69,7 +64,7 @@
                     <div class="sub-nav">
                         <p ng-cloak><b>{{moviesFound}}</b> {{moviesFoundText}}</p>
                         <p>
-                            <img class="clickable-icon" src="images/red-heart-icon.png" ng-click="showFavorites()"> Ver favoritas 
+                            <img class="clickable-icon" src="images/red-heart-icon.png" ng-click="showFavorites()"> Ver favoritas
                             <img class="clickable-icon" src="images/time-later-icon.png" ng-click="showSeeLater()"> Ver pospuestas
                         </p>
                     </div>
@@ -80,13 +75,15 @@
                     <div class="loading-movies" ng-show="loadingMovies">
                         <img src="images/loading-icon.gif">
                     </div>
-                    
+
                     <div class="movies" ng-hide="loadingMovies">
-                        
+
                         <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-cloak>
-                            <img src="images/coming-soon-image.png" ng-show="comingSoon(movie.release_date)" class="coming-soon-mark" ng-click="getModal(movie)">
-                            <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
-                            <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
+                            <div class="covers" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
+                                <img src="images/coming-soon-image.png" ng-show="comingSoon(movie.release_date)" class="coming-soon-mark">
+                                <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path" >
+                                <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path">
+                            </div>
                             <div class="movie-item-bar">
                                 <div class="item-icon">
                                     <img src="images/star-icon.png"> {{movie.vote_average}}
@@ -102,11 +99,10 @@
                             </div>
 
                         </div>
-                        
-                        <img src="images/transparent-right-arrow.png" ng-if="!movie.poster_path" class="load-more-movies"
-                             ng-click="loadMore()" ng-hide="isLastPage">
+
+                        <img src="images/transparent-right-arrow.png" ng-if="!movie.poster_path" class="load-more-movies" ng-click="loadMore()" ng-hide="isLastPage">
                     </div>
-                    
+
                 </div>
             </div>
         </div>
