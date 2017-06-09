@@ -18,6 +18,7 @@
         $scope.movies = [];
         $scope.isLastPage = true;
         var currentDate = new Date();
+        var seeingComingSoon = false;
 
         $scope.yearSlider = {
             minValue: 1960,
@@ -79,6 +80,7 @@
                     return MoviesFactory.getMoviesPreview()
                 }).then(function (moviesPreview) {
                     $scope.movies = moviesPreview;
+                    seeingComingSoon = false;
                     finishLoading();
                 }).then(function () {
                     checkLastPage();
@@ -213,6 +215,7 @@
                         return MoviesFactory.getMoviesPreview();
                     }).then(function (moviesPreview) {
                         $scope.movies = moviesPreview;
+                        seeingComingSoon = false;
                         finishLoading();
                     }).then(function () {
                         checkLastPage();
@@ -232,6 +235,7 @@
                     return MoviesFactory.getMoviesPreview()
                 }).then(function (moviesPreview) {
                     $scope.movies = moviesPreview;
+                    seeingComingSoon = false;
                     finishLoading();
                 }).then(function () {
                     checkLastPage();
@@ -324,6 +328,7 @@
         }
         
         function getComingSoon(){
+            seeingComingSoon = true;
              MoviesFactory.getComingSoon()
                 .then(function () {
                     return MoviesFactory.getMoviesPreview()
@@ -337,7 +342,8 @@
         }
         
         function comingSoon(movieReleaseDate){
-            if (movieReleaseDate && movieReleaseDate.length != 0) {
+            if (!seeingComingSoon && movieReleaseDate
+                && movieReleaseDate.length != 0) {
                 var year = parseInt(movieReleaseDate.substring(0,4));
                 var month = parseInt(movieReleaseDate.substring(5,7));
                 var day = parseInt(movieReleaseDate.substring(8,10));
