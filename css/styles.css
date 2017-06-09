@@ -246,14 +246,11 @@ aside {
     justify-content: space-between;
 }
 
-.movie-item {
-    cursor: pointer;
-}
-
 .movie-item>img {
     height: 400px;
     width: 270px;
     position: relative;
+    cursor: pointer;
 }
 
 .movie-item:hover>img {
@@ -276,6 +273,10 @@ aside {
     color: white;
     box-sizing: border-box;
     background: rgba(0, 0, 0, 0.7);
+}
+
+.clickable-icon {
+    cursor: pointer;
 }
 
 .loading-movies {

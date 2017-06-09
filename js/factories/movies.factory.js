@@ -23,10 +23,23 @@ function MoviesFactory($http) {
         getOmdbInfo: getOmdbInfo,
         getSimilarMovies: getSimilarMovies,
         getMoviesByKey: getMoviesByKey,
-        getFilteredMovies: getFilteredMovies
+        getFilteredMovies: getFilteredMovies,
+        addToFavorites: addToFavorites,
+        removeFromFavorites: removeFromFavorites,
+        addToSeeLater: addToSeeLater,
+        removeFromSeeLater: removeFromSeeLater,
+        getFavorites: getFavorites,
+        getSeeLater: getSeeLater,
+        saveFavorites: saveFavorites,
+        saveSeeLater: saveSeeLater
     }
 
     function init() {
+        if (localStorage.getItem("favoriteMovies")) loadFavorites();
+        else saveFavorites();
+        if (localStorage.getItem("seeLaterMovies")) loadSeeLater();
+        else saveSeeLater();
+        
         return discoverMovies();
     }
     
@@ -70,6 +83,9 @@ function MoviesFactory($http) {
     }
     
     function getMoviesPreview(){
+        loadFavorites();
+        loadSeeLater();
+        
         var moviesPreview = [];
         for (var i=0; i < moviesArray.length; i++){
             var moviePreview = {};
@@ -93,22 +109,63 @@ function MoviesFactory($http) {
         return totalResults;
     }
     
-    function isFavorite(movieId){
-        for (var i=0; i < favoritesArray.length; i++){
-             if (favorites[i] === movieId) return true;
+    function getMovieIndex(movieId, array){
+        for (var i=0; i < array.length; i++){
+             if (array[i].id === movieId) return i;
         }
-        return false;
+        return -1;
+    }
+    
+    function isFavorite(movieId){
+        if (getMovieIndex(movieId, favoritesArray) === -1) return false;
+        else return true;
+    }
+    
+    function addToFavorites(movie){
+        favoritesArray.push(movie);
+    }
+    
+    function removeFromFavorites(movieId){
+        var index = getMovieIndex(movieId, favoritesArray);
+        if (index !== -1) favoritesArray.splice(index,1);
     }
     
     function seeLater(movieId){
-        for (var i=0; i < seeLaterArray.length; i++){
-             if (seeLaterArray[i] === movieId) return true;
-        }
-        return false;
+        if (getMovieIndex(movieId, seeLaterArray) === -1) return false;
+        else return true;
     }
     
-    function getMovieDetails(movieID){
-        
+    function addToSeeLater(movie){
+        seeLaterArray.push(movie);
+    }
+    
+    function removeFromSeeLater(movieId){
+        var index = getMovieIndex(movieId, seeLaterArray);
+        if (index !== -1) seeLaterArray.splice(index,1);
+    }
+    
+    function getFavorites(){
+        return favoritesArray;
+    }
+    
+    function getSeeLater(){
+        return seeLaterArray;
+    }
+    
+    function saveFavorites(){
+        localStorage.setItem("favoriteMovies", JSON.stringify(favoritesArray));
+    }
+    
+    function loadFavorites() {
+        favoritesArray = JSON.parse(localStorage.getItem("favoriteMovies"));
+    }
+
+    function saveSeeLater(){
+        localStorage.setItem("seeLaterMovies", JSON.stringify(seeLaterArray));
+    }
+    
+    function loadSeeLater() {
+        seeLaterArray = JSON.parse(localStorage.getItem("seeLaterMovies"));
     }
     
     function getMovieTrailer(movieID, trailerLanguage){

@@ -67,9 +67,10 @@
 
                 <div class="right-content">
                     <div class="sub-nav">
-                        <p ng-cloak><b>{{moviesFound}}</b> películas encontradas</p>
-                        <p><img src="images/heart-icon.png"> Ver favoritos 
-                            <img src="images/time-later-icon.png"> Ver pospuestos
+                        <p ng-cloak><b>{{moviesFound}}</b> {{moviesFoundText}}</p>
+                        <p>
+                            <img class="clickable-icon" src="images/red-heart-icon.png" ng-click="showFavorites()"> Ver favoritas 
+                            <img class="clickable-icon" src="images/time-later-icon.png" ng-click="showSeeLater()"> Ver pospuestas
                         </p>
                     </div>
 
@@ -81,21 +82,21 @@
                     </div>
                     
                     <div class="movies" ng-hide="loadingMovies">
-                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}" ng-cloak>
+                        <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-cloak>
 
-                            <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path">
-                            <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path">
+                            <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
+                            <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
                             <div class="movie-item-bar">
                                 <div class="item-icon">
                                     <img src="images/star-icon.png"> {{movie.vote_average}}
                                 </div>
                                 <div class="item-icon">
-                                    <img ng-show="!movie.favorite" src="images/heart-icon.ico" ng-click="addToFav(movie.id)">
-                                    <img ng-show="movie.favorite" src="images/heart-icon.png" ng-click="removeFromFav(movie.id)">
+                                    <img class="clickable-icon" ng-show="!movie.favorite" src="images/grey-heart-icon.png" ng-click="addToFavorites(movie)">
+                                    <img class="clickable-icon" ng-show="movie.favorite" src="images/red-heart-icon.png" ng-click="removeFromFavorites(movie)">
                                 </div>
                                 <div class="item-icon">
-                                    <img ng-show="!movie.later" src="images/time-icon.png" ng-click="addToSeeLater(movie.id)">
-                                    <img ng-show="movie.later" src="images/time-later-icon.png" ng-click="removeFromSeeLater(movie.id)">
+                                    <img class="clickable-icon" ng-show="!movie.later" src="images/time-icon.png" ng-click="addToSeeLater(movie)">
+                                    <img class="clickable-icon" ng-show="movie.later" src="images/time-later-icon.png" ng-click="removeFromSeeLater(movie)">
                                 </div>
                             </div>
 

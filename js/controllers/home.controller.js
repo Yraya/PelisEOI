@@ -7,9 +7,11 @@
     HomeController.$inject = ['$scope', 'MoviesFactory'];
 
     function HomeController($scope, MoviesFactory) {
+        /*** Variables ***/
         var YOUTUBE_BASE_PATH = "https://www.youtube.com/embed/";
         $scope.movieTrailer = YOUTUBE_BASE_PATH + "trailer-key-not-found";
         $scope.moviesFound = 0;
+        $scope.moviesFoundText = "película/s encontrada/s";
         $scope.selectedGenresID = [];
         $scope.searchKey = "";
         $scope.loadingMovies = true;
@@ -37,12 +39,21 @@
             }
         };
 
+        /*** Functions **/
         $scope.resetFilteredSearch = resetFilteredSearch;
         $scope.getModal = getModal;
         $scope.filterByGenre = filterByGenre;
         $scope.searchMovies = searchMovies;
         $scope.filterMovies = filterMovies;
 
+        $scope.addToFavorites = addToFavorites;
+        $scope.removeFromFavorites = removeFromFavorites;
+        $scope.addToSeeLater = addToSeeLater;
+        $scope.removeFromSeeLater = removeFromSeeLater;
+        
+        $scope.showFavorites = showFavorites;
+        $scope.showSeeLater = showSeeLater;
+        
         init();
 
 
@@ -51,10 +62,7 @@
             MoviesFactory.getGenresList().then(function (genres) {
                 $scope.genresList = genres;
             });
-            discover().then(function () {
-                $scope.basicMovieList = angular.copy($scope.movies);
-                $scope.basicMovieListNResults = angular.copy($scope.moviesFound);
-            });
+            discover();
         }
 
 
@@ -67,7 +75,8 @@
                     $scope.movies = moviesPreview;
                     finishLoading();
                 }).then(function () {
-                    $scope.moviesFound = MoviesFactory.getMoviesFound()
+                    $scope.moviesFound = MoviesFactory.getMoviesFound();
+                    $scope.moviesFoundText = "película/s encontrada/s";
                 });
         }
 
@@ -179,8 +188,9 @@
                         finishLoading();
                     }).then(function () {
                         $scope.moviesFound = MoviesFactory.getMoviesFound();
+                        $scope.moviesFoundText = "película/s encontrada/s";
                     });
-            } else resetMovies();
+            } else discover();
         }
 
         function filterMovies() {
@@ -192,7 +202,8 @@
                     $scope.movies = moviesPreview;
                     finishLoading();
                 }).then(function () {
-                    $scope.moviesFound = MoviesFactory.getMoviesFound()
+                    $scope.moviesFound = MoviesFactory.getMoviesFound();
+                    $scope.moviesFoundText = "película/s encontrada/s";
                 });
         }
 
@@ -210,23 +221,55 @@
 
         function resetFilteredSearch() {
             deleteFilters();
-            resetMovies();
-        }
-
-        function resetMovies() {
-            $scope.movies = angular.copy($scope.basicMovieList);
-            $scope.moviesFound = angular.copy($scope.basicMovieListNResults);
+            discover();
         }
 
         function startLoading() {
             //This works better than $scope.movies.movies = [] in order to empty the ng-repeat array
             $scope.movies.length = 0;
             $scope.moviesFound = 0;
+            $scope.moviesFoundText = "película/s encontrada/s";
             $scope.loadingMovies = true;
         }
 
         function finishLoading() {
             $scope.loadingMovies = false;
+        }
+        
+        function addToFavorites (movie){
+            movie.favorite = true;
+            MoviesFactory.addToFavorites(movie);
+            MoviesFactory.saveFavorites();
+        }
+        function removeFromFavorites (movie){
+            movie.favorite = false;
+            MoviesFactory.removeFromFavorites(movie.id);
+            $scope.moviesFound = $scope.movies.length;
+            MoviesFactory.saveFavorites();
+        }
+        
+        function addToSeeLater (movie){
+            movie.later = true;
+            MoviesFactory.addToSeeLater(movie);
+            MoviesFactory.saveSeeLater();
+        }
+        function removeFromSeeLater (movie){
+            movie.later = false;
+            MoviesFactory.removeFromSeeLater(movie.id);
+            $scope.moviesFound = $scope.movies.length;
+            MoviesFactory.saveSeeLater();
+        }
+        
+        function showFavorites(){
+            $scope.movies = MoviesFactory.getFavorites();
+            $scope.moviesFound = $scope.movies.length;
+            $scope.moviesFoundText = "película/s favorita/s";
+        }
+        
+        function showSeeLater(){
+            $scope.movies = MoviesFactory.getSeeLater();
+            $scope.moviesFound = $scope.movies.length;
+            $scope.moviesFoundText = "película/s pospuesta/s";
         }
     }
 
