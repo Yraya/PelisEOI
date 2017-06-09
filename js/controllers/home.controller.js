@@ -102,7 +102,7 @@
             $scope.movieOverview = movie.overview;
             $scope.movieCover = movie.poster_path;
             var year = movie.release_date;
-            if (year.length != 0) year = year.substring(0,4);
+            if (year && year.length != 0) year = year.substring(0,4);
             $scope.movieYear = year;
             $scope.movieRuntime = "-";
             $scope.movieGenres = [];
@@ -152,16 +152,19 @@
 
             // When the user clicks the movie, open the modal 
             modal.style.display = "block";
+            $scope.modalActive = true;
 
             // When the user clicks on <span> (x), close the modal
             span.onclick = function () {
                 modal.style.display = "none";
+                $scope.modalActive = false;
             }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function (event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
+                    $scope.modalActive = false;
                 }
             }
         }
@@ -326,7 +329,7 @@
         }
         
         function comingSoon(movieReleaseDate){
-            if (movieReleaseDate.length != 0) {
+            if (movieReleaseDate && movieReleaseDate.length != 0) {
                 var year = parseInt(movieReleaseDate.substring(0,4));
                 var month = parseInt(movieReleaseDate.substring(5,7));
                 var day = parseInt(movieReleaseDate.substring(8,10));

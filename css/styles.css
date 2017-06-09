@@ -8,6 +8,14 @@ body {
     padding: 0;
 }
 
+.disable-vertical-scroll {
+    overflow-y: hidden;
+}
+
+.enable-vertical-scroll {
+    overflow-y: scroll;
+}
+
 h1 {
     display: none;
 }
