@@ -37,7 +37,8 @@ function MoviesFactory($http) {
         saveSeeLater: saveSeeLater,
         loadMore: loadMore,
         getLastPage: getLastPage,
-        getCurrentPage: getCurrentPage
+        getCurrentPage: getCurrentPage,
+        getComingSoon: getComingSoon
         
     }
 
@@ -57,8 +58,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: query
         }).then(function successCallback(data) {
-            console.log("Movies:");
-            console.log(data);
             moviesArray = data["data"].results;
             totalResults = data["data"].total_results;
         }, function errorCallback(data) {
@@ -83,8 +82,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: API_INITIAL_PATH+"genre/movie/list?language="+language+"&api_key="+API_KEY
         }).then(function successCallback(data) {
-            console.log("Genres:");
-            console.log(data);
             genres = data["data"].genres;
         }, function errorCallback(data) {
             console.log(404 + " No genres found");
@@ -103,9 +100,7 @@ function MoviesFactory($http) {
             moviePreview.vote_average = moviesArray[i].vote_average;
             moviePreview.overview = moviesArray[i].overview;
             moviePreview.title = moviesArray[i].title;
-            var year = moviesArray[i].release_date;
-            if (year.length != 0) year = year.substring(0,4);
-            moviePreview.release_year = year;
+            moviePreview.release_date = moviesArray[i].release_date;
             
             moviePreview.favorite = isFavorite(moviePreview.id);
             moviePreview.later = seeLater(moviePreview.id);
@@ -200,8 +195,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: API_INITIAL_PATH+"movie/"+movieID+"/videos?&language="+trailerLanguage+"&api_key="+API_KEY
         }).then(function successCallback(data) {
-            console.log("Trailer:");
-            console.log(data);
             var trailers = data["data"].results;
             if (trailers.length === 0){
                 return -1;
@@ -218,8 +211,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: API_INITIAL_PATH+"movie/"+movieID+"?language="+language+"&api_key="+API_KEY
         }).then(function successCallback(data) {
-            console.log("Movie details:");
-            console.log(data);
             return data["data"];
         }, function errorCallback(data) {
             console.log(404 + " Movie not found");
@@ -231,8 +222,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: "https://www.omdbapi.com/?i="+imdbID+"&apikey=3370463f"
         }).then(function successCallback(data) {
-            console.log("OMBD Info:");
-            console.log(data);
             return data["data"];
         }, function errorCallback(data) {
             console.log(404 + " Movie not found");
@@ -244,8 +233,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: API_INITIAL_PATH+"movie/"+movieID+"/similar?language="+language+"&api_key="+API_KEY
         }).then(function successCallback(data) {
-            console.log("Similar movies:");
-            console.log(data);
             var similarMovies = data["data"].results;
             
             if (similarMovies.length > 4){
@@ -253,7 +240,7 @@ function MoviesFactory($http) {
             } else return similarMovies;
             
         }, function errorCallback(data) {
-            console.log(404 + " Movie not found");
+            console.log(404 + " Movies not found");
         });
     }
     
@@ -264,8 +251,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: query
         }).then(function successCallback(data) {
-            console.log("Movies by key ("+searchKey+"):");
-            console.log(data);
             moviesArray = data["data"].results;
             totalResults = data["data"].total_results;
             
@@ -282,8 +267,6 @@ function MoviesFactory($http) {
             method: 'GET',
             url: query
         }).then(function successCallback(data) {
-            console.log("Movies between year "+yearMin+" and "+yearMax+":");
-            console.log(data);
             moviesArray = data["data"].results;
             totalResults = data["data"].total_results;
             
@@ -305,5 +288,26 @@ function MoviesFactory($http) {
         }, function errorCallback(data) {
             console.log(404 + " Movies not found");
         });
+    }
+    
+    function getComingSoon(){
+        var currentDay = getStringCurrentDate();
+        query = API_INITIAL_PATH+"discover/movie?sort_by=popularity.desc&language="+language+"&api_key="+API_KEY+"&primary_release_date.gte="+currentDay;
+        page = 1;
+        return $http({
+            method: 'GET',
+            url: query
+        }).then(function successCallback(data) {
+            moviesArray = data["data"].results;
+            totalResults = data["data"].total_results;
+            
+        }, function errorCallback(data) {
+            console.log(404 + " Movies not found");
+        });
+    }
+    
+    function getStringCurrentDate(){
+        var date = new Date();
+        return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
     }
 }

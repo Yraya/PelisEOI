@@ -53,6 +53,7 @@ nav>.wrapper>.container-flex {
 
 #site-nav-links li {
     display: inline-block;
+    cursor: pointer;
 }
 
 .search {
@@ -287,6 +288,15 @@ aside {
     color: white;
     box-sizing: border-box;
     background: rgba(0, 0, 0, 0.7);
+}
+
+.movie-item>img.coming-soon-mark{
+    width: 270px;
+    height: 190px;
+    z-index: 2;
+    padding-top: 10px;
+    position: absolute;
+    box-sizing: border-box;
 }
 
 .clickable-icon {

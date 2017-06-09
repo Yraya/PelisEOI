@@ -17,6 +17,7 @@
         $scope.loadingMovies = true;
         $scope.movies = [];
         $scope.isLastPage = true;
+        var currentDate = new Date();
 
         $scope.yearSlider = {
             minValue: 1960,
@@ -55,7 +56,10 @@
         $scope.showFavorites = showFavorites;
         $scope.showSeeLater = showSeeLater;
         $scope.loadMore = loadMore;
-
+        
+        $scope.getComingSoon = getComingSoon;
+        $scope.comingSoon = comingSoon;
+        
         init();
 
 
@@ -97,7 +101,9 @@
             $scope.movieTitle = movie.title;
             $scope.movieOverview = movie.overview;
             $scope.movieCover = movie.poster_path;
-            $scope.movieYear = movie.release_year;
+            var year = movie.release_date;
+            if (year.length != 0) year = year.substring(0,4);
+            $scope.movieYear = year;
             $scope.movieRuntime = "-";
             $scope.movieGenres = [];
             $scope.movieVoteAverage = movie.vote_average;
@@ -305,7 +311,36 @@
                     checkLastPage();
                 });
         }
-
+        
+        function getComingSoon(){
+             MoviesFactory.getComingSoon()
+                .then(function () {
+                    return MoviesFactory.getMoviesPreview()
+                }).then(function (moviesPreview) {
+                    $scope.movies = moviesPreview;
+                    $scope.moviesFound = MoviesFactory.getMoviesFound();
+                    $scope.moviesFoundText = "película/s proximamente";
+                    finishLoading();
+                    checkLastPage();
+                });
+        }
+        
+        function comingSoon(movieReleaseDate){
+            if (movieReleaseDate.length != 0) {
+                var year = parseInt(movieReleaseDate.substring(0,4));
+                var month = parseInt(movieReleaseDate.substring(5,7));
+                var day = parseInt(movieReleaseDate.substring(8,10));
+                
+                if (year > currentDate.getFullYear()) return true;
+                if (year == currentDate.getFullYear()){
+                    if (month > (currentDate.getMonth()+1)) return true;
+                    if (month == (currentDate.getMonth()+1)){
+                        if (day > (currentDate.getDate())) return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
 })();
