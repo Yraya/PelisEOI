@@ -16,6 +16,7 @@
         $scope.searchKey = "";
         $scope.loadingMovies = true;
         $scope.movies = [];
+        $scope.isLastPage = true;
 
         $scope.yearSlider = {
             minValue: 1960,
@@ -50,10 +51,11 @@
         $scope.removeFromFavorites = removeFromFavorites;
         $scope.addToSeeLater = addToSeeLater;
         $scope.removeFromSeeLater = removeFromSeeLater;
-        
+
         $scope.showFavorites = showFavorites;
         $scope.showSeeLater = showSeeLater;
-        
+        $scope.loadMore = loadMore;
+
         init();
 
 
@@ -75,9 +77,18 @@
                     $scope.movies = moviesPreview;
                     finishLoading();
                 }).then(function () {
+                    checkLastPage();
                     $scope.moviesFound = MoviesFactory.getMoviesFound();
                     $scope.moviesFoundText = "película/s encontrada/s";
                 });
+        }
+        
+        function checkLastPage(){
+            var last = MoviesFactory.getLastPage();
+            var current = MoviesFactory.getCurrentPage();
+            if (MoviesFactory.getLastPage() == MoviesFactory.getCurrentPage()){
+                $scope.isLastPage = true;
+            } else $scope.isLastPage = false;
         }
 
         function getModal(movie) {
@@ -187,10 +198,14 @@
                         $scope.movies = moviesPreview;
                         finishLoading();
                     }).then(function () {
+                        checkLastPage();
                         $scope.moviesFound = MoviesFactory.getMoviesFound();
                         $scope.moviesFoundText = "película/s encontrada/s";
                     });
-            } else discover();
+            } else {
+                deleteFilters();
+                discover();
+            }
         }
 
         function filterMovies() {
@@ -202,6 +217,7 @@
                     $scope.movies = moviesPreview;
                     finishLoading();
                 }).then(function () {
+                    checkLastPage();
                     $scope.moviesFound = MoviesFactory.getMoviesFound();
                     $scope.moviesFoundText = "película/s encontrada/s";
                 });
@@ -235,42 +251,61 @@
         function finishLoading() {
             $scope.loadingMovies = false;
         }
-        
-        function addToFavorites (movie){
+
+        function addToFavorites(movie) {
             movie.favorite = true;
             MoviesFactory.addToFavorites(movie);
             MoviesFactory.saveFavorites();
         }
-        function removeFromFavorites (movie){
+
+        function removeFromFavorites(movie) {
             movie.favorite = false;
             MoviesFactory.removeFromFavorites(movie.id);
             $scope.moviesFound = $scope.movies.length;
             MoviesFactory.saveFavorites();
         }
-        
-        function addToSeeLater (movie){
+
+        function addToSeeLater(movie) {
             movie.later = true;
             MoviesFactory.addToSeeLater(movie);
             MoviesFactory.saveSeeLater();
         }
-        function removeFromSeeLater (movie){
+
+        function removeFromSeeLater(movie) {
             movie.later = false;
             MoviesFactory.removeFromSeeLater(movie.id);
-            $scope.moviesFound = $scope.movies.length;
+            $scope.moviesFound = MoviesFactory.getMoviesFound();
             MoviesFactory.saveSeeLater();
         }
-        
-        function showFavorites(){
+
+        function showFavorites() {
             $scope.movies = MoviesFactory.getFavorites();
-            $scope.moviesFound = $scope.movies.length;
+            checkLastPage();
+            $scope.moviesFound = MoviesFactory.getMoviesFound();
             $scope.moviesFoundText = "película/s favorita/s";
         }
-        
-        function showSeeLater(){
+
+        function showSeeLater() {
             $scope.movies = MoviesFactory.getSeeLater();
+            checkLastPage();
             $scope.moviesFound = $scope.movies.length;
             $scope.moviesFoundText = "película/s pospuesta/s";
         }
+
+        function loadMore() {
+            startLoading();
+            MoviesFactory.loadMore()
+                .then(function () {
+                    return MoviesFactory.getMoviesPreview()
+                }).then(function (moviesPreview) {
+                    $scope.movies = moviesPreview;
+                    $scope.moviesFound = MoviesFactory.getMoviesFound();
+                    finishLoading();
+                    window.scrollTo(0, 0);
+                    checkLastPage();
+                });
+        }
+
     }
 
 })();

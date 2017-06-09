@@ -82,8 +82,8 @@
                     </div>
                     
                     <div class="movies" ng-hide="loadingMovies">
+                        
                         <div ng-repeat="movie in movies track by movie.id" class="movie-item" ng-cloak>
-
                             <img src="{{posterInitalPath+movie.poster_path}}" ng-if="movie.poster_path" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
                             <img src="images/cover-not-found.jpg" ng-if="!movie.poster_path" ng-click="getModal(movie)" title="{{movie.title}}" alt="{{movie.title}}">
                             <div class="movie-item-bar">
@@ -101,6 +101,9 @@
                             </div>
 
                         </div>
+                        
+                        <img src="images/transparent-right-arrow.png" ng-if="!movie.poster_path" class="load-more-movies"
+                             ng-click="loadMore()" ng-hide="isLastPage">
                     </div>
                     
                 </div>

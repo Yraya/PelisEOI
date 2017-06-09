@@ -11,6 +11,9 @@ function MoviesFactory($http) {
     var API_KEY = "e5ca57166b93c4a814295f2034a2b0e8";
     var API_INITIAL_PATH = "https://api.themoviedb.org/3/";
     var POSTER_INITIAL_PATH = "https://image.tmdb.org/t/p/w342/";
+    
+    var query;
+    var page;
 
     return {
         init: init,
@@ -31,7 +34,11 @@ function MoviesFactory($http) {
         getFavorites: getFavorites,
         getSeeLater: getSeeLater,
         saveFavorites: saveFavorites,
-        saveSeeLater: saveSeeLater
+        saveSeeLater: saveSeeLater,
+        loadMore: loadMore,
+        getLastPage: getLastPage,
+        getCurrentPage: getCurrentPage
+        
     }
 
     function init() {
@@ -44,9 +51,11 @@ function MoviesFactory($http) {
     }
     
     function discoverMovies(){
+        query = API_INITIAL_PATH+"discover/movie?sort_by=popularity.desc&language="+language+"&api_key="+API_KEY;
+        page = 1;
         return $http({
             method: 'GET',
-            url: API_INITIAL_PATH+"discover/movie?sort_by=popularity.desc&language="+language+"&api_key="+API_KEY
+            url: query
         }).then(function successCallback(data) {
             console.log("Movies:");
             console.log(data);
@@ -105,6 +114,18 @@ function MoviesFactory($http) {
         return moviesPreview;
     }
     
+    function getLastPage(){
+        if (totalResults == 0) return 1;
+        var fullPages = Math.floor(totalResults / 20);
+        if (totalResults % 20 === 0){
+            return fullPages;
+        } else return ++fullPages;
+    }
+    
+    function getCurrentPage(){
+        return page;
+    }
+    
     function getMoviesFound(){
         return totalResults;
     }
@@ -144,11 +165,17 @@ function MoviesFactory($http) {
         if (index !== -1) seeLaterArray.splice(index,1);
     }
     
+    //Currently favorite lists and watch later do not have a paging system
+    //It would be interesting to return these lists in arrays of 20 elements each time to use the same system we used with the results returned by the API
     function getFavorites(){
+        page = 1;
+        totalResults = favoritesArray.length;
         return favoritesArray;
     }
     
     function getSeeLater(){
+        page = 1;
+        totalResults = seeLaterArray.length;
         return seeLaterArray;
     }
     
@@ -231,9 +258,11 @@ function MoviesFactory($http) {
     }
     
     function getMoviesByKey(searchKey){
+        query = API_INITIAL_PATH+"search/movie?api_key="+API_KEY+"&language="+language+"&query="+searchKey
+        page = 1;
         return $http({
             method: 'GET',
-            url: API_INITIAL_PATH+"search/movie?api_key="+API_KEY+"&language="+language+"&query="+searchKey
+            url: query
         }).then(function successCallback(data) {
             console.log("Movies by key ("+searchKey+"):");
             console.log(data);
@@ -247,12 +276,28 @@ function MoviesFactory($http) {
     
     function  getFilteredMovies(yearMin, yearMax, tmdbMin, tmdbMax, selectedGenres){
         var genresList = selectedGenres.join([separador = ',']);
-        
+        query = API_INITIAL_PATH+"discover/movie?api_key="+API_KEY+"&language="+language+"&sort_by=popularity.desc&primary_release_date.gte="+yearMin+"&primary_release_date.lte="+yearMax+"&vote_average.gte="+tmdbMin+"&vote_average.lte="+tmdbMax+"&with_genres="+genresList;
+        page = 1;
         return $http({
             method: 'GET',
-            url: API_INITIAL_PATH+"discover/movie?api_key="+API_KEY+"&language="+language+"&sort_by=popularity.desc&primary_release_date.gte="+yearMin+"&primary_release_date.lte="+yearMax+"&vote_average.gte="+tmdbMin+"&vote_average.lte="+tmdbMax+"&with_genres="+genresList
+            url: query
         }).then(function successCallback(data) {
             console.log("Movies between year "+yearMin+" and "+yearMax+":");
+            console.log(data);
+            moviesArray = data["data"].results;
+            totalResults = data["data"].total_results;
+            
+        }, function errorCallback(data) {
+            console.log(404 + " Movies not found");
+        });
+    }
+    
+    function loadMore(){
+        page++;
+        return $http({
+            method: 'GET',
+            url: query+"&page="+page
+        }).then(function successCallback(data) {
             console.log(data);
             moviesArray = data["data"].results;
             totalResults = data["data"].total_results;

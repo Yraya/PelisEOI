@@ -130,7 +130,7 @@ aside {
     padding-top: 17px;
     padding-right: 17px;
     border-right: solid 1px #e7eaec;
-    width: 300px;
+    width: 270px;
 }
 
 .filter-icon {
@@ -230,8 +230,8 @@ aside {
 
 .right-content {
     padding-top: 17px;
-    padding-left: 17px;
-    width: 871px;
+    padding-left: 24px;
+    width: 901px;
 }
 
 .sub-nav p {
@@ -246,11 +246,25 @@ aside {
     justify-content: space-between;
 }
 
-.movie-item>img {
+.movie-item {
+    padding-bottom: 22px;
+}
+
+.movie-item>img, .load-more-movies {
     height: 400px;
     width: 270px;
     position: relative;
     cursor: pointer;
+}
+
+.load-more-movies {
+    transform: scale(0.4);
+    transition: 1s ease-in-out;
+}
+
+.load-more-movies:hover {
+    transform: scale(0.5);
+    transition: 1s ease-in-out;
 }
 
 .movie-item:hover>img {
